@@ -38,7 +38,7 @@ install_plesk() {
     local i=0
     while read line; do
       ((i=i+1))
-      egrep -q '(^\s*#|^\s*$)' <<< "$line" && continue
+      grep -E -q '(^\s*#|^\s*$)' <<< "$line" && continue
       local dist
       read _ _ dist _ <<< "$line"
       [[ "$dist" == 'bullseye-backports' ]] || continue
@@ -75,7 +75,7 @@ install_plesk() {
   debug 'downloaded plesk installer'
 
   [[ "${version}" == PLESK ]] && version="${PLESK_STD_VERSION}"
-  if ! echo "${version}" | egrep --quiet "^PLESK_[[:digit:]]+_[[:digit:]]+_[[:digit:]]+$"; then
+  if ! echo "${version}" | grep -E --quiet "^PLESK_[[:digit:]]+_[[:digit:]]+_[[:digit:]]+$"; then
     version="$(
       execute_chroot_command_wo_debug "${temp_file} --select-product-id plesk --show-releases 2> /dev/null" \
         | tail -n +2 \

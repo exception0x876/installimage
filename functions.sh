@@ -835,8 +835,8 @@ if [ -n "$1" ]; then
   CRYPTPASSWORD="$(grep -m 1 '^CRYPTPASSWORD ' "$1" | cut -d ' ' -f 2- | sed -z 's/\n$//')"
 
   # get LVM volume group config
-  LVM_VG_COUNT="$(egrep -c '^PART *lvm ' "$1")"
-  LVM_VG_ALL="$(egrep '^PART *lvm ' "$1")"
+  LVM_VG_COUNT="$(grep -E -c '^PART *lvm ' "$1")"
+  LVM_VG_ALL="$(grep -E '^PART *lvm ' "$1")"
 
   # void the check var
   LVM_VG_CHECK=""
@@ -3871,10 +3871,8 @@ exit_function() {
   echo
   echo "If your problem is not described there, try booting into a fresh"
   echo "rescue system and restart the installation. If the installation"
-  echo "fails again, please contact our support via Hetzner Robot, providing"
+  echo "fails again, please contact our support, providing"
   echo "the IP address of the server and a copy of the debug file."
-  echo
-  echo "  https://robot.hetzner.com/"
   echo
 
   report_install
