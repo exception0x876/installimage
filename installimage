@@ -42,6 +42,7 @@ FOLD="$(mktemp -d /installimage.XXXXX)"
 
 # copy our config file and read global variables and functions
 cp -a "$REALCONFIG" /tmp/install.vars
+cat "$SCRIPTPATH/config-rigilweb.sh" >> /tmp/install.vars
 . /tmp/install.vars
 
 # clear debugfile
