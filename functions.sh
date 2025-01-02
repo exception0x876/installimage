@@ -843,7 +843,7 @@ if [ -n "$1" ]; then
   for ((i=1; i<=LVM_VG_COUNT; i++)); do
     LVM_VG_LINE="$(echo "$LVM_VG_ALL" | head -n$i | tail -n1)"
     #LVM_VG_PART[$i]=$i #"$(echo $LVM_VG_LINE | awk '{print $2}')"
-    LVM_VG_PART[$i]=$(echo "$PART_LINES" | egrep -n '^PART *lvm ' | head -n$i | tail -n1 | cut -d: -f1)
+    LVM_VG_PART[$i]=$(echo "$PART_LINES" | grep -E -n '^PART *lvm ' | head -n$i | tail -n1 | cut -d: -f1)
     LVM_VG_NAME[$i]="$(echo "$LVM_VG_LINE" | awk '{print $3}')"
     LVM_VG_SIZE[$i]="$(translate_unit "$(echo "$LVM_VG_LINE" | awk '{print $4}')")"
 
@@ -963,8 +963,8 @@ if [ -n "$1" ]; then
   local take_over_rescue_system_ssh_public_keys="$(grep -m 1 '^TAKE_OVER_RESCUE_SYSTEM_SSH_PUBLIC_KEYS' "$1" | awk '{ print tolower($2) }')"
   [[ "$take_over_rescue_system_ssh_public_keys" =~ ^yes$|^no$ ]] && export OPT_TAKE_OVER_RESCUE_SYSTEM_SSH_PUBLIC_KEYS="$take_over_rescue_system_ssh_public_keys"
 
-  if [[ "$OPT_USE_SSHKEYS" != '1' ]] && [[ "${OPT_TAKE_OVER_RESCUE_SYSTEM_SSH_PUBLIC_KEYS:-yes}" == 'yes' ]] && [[ -s /root/.ssh/robot_user_keys ]]; then
-    export OPT_SSHKEYS_URL='/root/.ssh/robot_user_keys'
+  if [[ "$OPT_USE_SSHKEYS" != '1' ]] && [[ "${OPT_TAKE_OVER_RESCUE_SYSTEM_SSH_PUBLIC_KEYS:-yes}" == 'yes' ]] && [[ -s /root/.ssh/authorized_keys ]]; then
+    export OPT_SSHKEYS_URL='/root/.ssh/authorized_keys'
     export OPT_USE_SSHKEYS=1
   fi
 
@@ -3708,7 +3708,7 @@ translate_unit() {
     return 1
   fi
   for unit in M MiB G GiB T TiB; do
-    if echo "$1" | egrep -q "^[[:digit:]]+$unit$"; then
+    if echo "$1" | grep -E -q "^[[:digit:]]+$unit$"; then
       value=$(echo "$1" | sed "s/$unit//")
 
       case "$unit" in
